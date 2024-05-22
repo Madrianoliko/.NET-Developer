@@ -142,3 +142,8 @@ GC.Collect();
 
 employees.Clear();
 employees = null;
+
+bethany.CalculteWage();
+
+Account account = new Account("1234567890");
+//account.AccountNumber = "5"; -- error because record is immutable

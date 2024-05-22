@@ -3,14 +3,18 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>_009___Classes_and_Custom_Types</RootNamespace>
+    <RootNamespace>_010___Arrays_and_Lists</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="BethanysPieShopHRM.Logic">
-      <HintPath>009 - BethanysPieShopHRM.Logic.dll</HintPath>
+      <HintPath>..\GlobalFiles\BethanysPieShopHRM.Logic.dll</HintPath>
     </Reference>
   </ItemGroup>
 

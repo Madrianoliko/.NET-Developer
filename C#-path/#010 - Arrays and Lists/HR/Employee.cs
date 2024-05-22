@@ -1,28 +1,24 @@
 ﻿using BethanysPieShopHRM.Logic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
-namespace _009___Classes_and_Custom_Types.HR
+namespace BethanysPieShopHRM.HR
 {
     internal class Employee
     {
         public string firstName;
         public string lastName;
         public string email;
+
         public int numberOfHoursWorked;
         public double wage;
-        public double hourlyRate;
+        public double? hourlyRate;
         public EmployeeType employeeType;
-        public DateTime birthDay;
-        const int minimalHoursWorkedUnit = 1;
-        public static double taxRate = 0.15;
 
-        public Employee(string first, string last, string em, DateTime bd) : this(first, last, em, bd, 0, EmployeeType.StoreManager)
-        {
-        }
+        public DateTime birthDay;
+
+        const int minimalHoursWorkedUnit = 1;
+
+        public static double taxRate = 0.15;
 
         public Employee(string first, string last, string em, DateTime bd, double? rate, EmployeeType empType)
         {
@@ -34,7 +30,9 @@ namespace _009___Classes_and_Custom_Types.HR
             employeeType = empType;
         }
 
-  
+        public Employee(string first, string last, string em, DateTime bd) : this(first, last, em, bd, 0, EmployeeType.StoreManager)
+        {
+        }
 
         public void PerformWork()
         {
@@ -90,13 +88,6 @@ namespace _009___Classes_and_Custom_Types.HR
             return bonus;
         }
 
-        public double CalculteWage()
-        {
-            WageCalculations wageCalculations = new WageCalculations();
-            double calculateValued = wageCalculations.ComplexWageCalculation(wage, taxRate, 3, 42);
-            return calculateValued;
-        }
-
 
         public double ReceiveWage(bool resetHours = true)
         {
@@ -105,11 +96,11 @@ namespace _009___Classes_and_Custom_Types.HR
             if (employeeType == EmployeeType.Manager)
             {
                 Console.WriteLine($"An extra was added to the wage since {firstName} is a manager!");
-                wageBeforeTax = numberOfHoursWorked * hourlyRate * 1.25;
+                wageBeforeTax = numberOfHoursWorked * hourlyRate.Value * 1.25;
             }
             else
             {
-                wageBeforeTax = numberOfHoursWorked * hourlyRate;
+                wageBeforeTax = numberOfHoursWorked * hourlyRate.Value;
             }
 
             double taxAmount = wageBeforeTax * taxRate;
@@ -122,6 +113,23 @@ namespace _009___Classes_and_Custom_Types.HR
                 numberOfHoursWorked = 0;
 
             return wage;
+        }
+
+        public double CalculateWage()
+        {
+            WageCalculations wageCalculations = new WageCalculations();
+
+            double calculateValue = wageCalculations.ComplexWageCalculation(wage, taxRate, 3, 42);
+
+            return calculateValue;
+
+        }
+
+        public string ConvertToJson()
+        {
+            string json = JsonConvert.SerializeObject(this);
+
+            return json;
         }
 
         public static void DisplayTaxRate()
