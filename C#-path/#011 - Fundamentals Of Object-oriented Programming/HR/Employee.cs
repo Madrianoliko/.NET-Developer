@@ -1,38 +1,163 @@
-﻿using BethanysPieShopHRM.Logic;
+﻿using _011___Fundamentals_Of_Object_oriented_Programming.HR;
+using BethanysPieShopHRM.Logic;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace BethanysPieShopHRM.HR
 {
     internal class Employee
     {
-        public string firstName;
-        public string lastName;
-        public string email;
+        private string firstName;
+        private string lastName;
+        private string email;
 
-        public int numberOfHoursWorked;
-        public double wage;
-        public double? hourlyRate;
-        public EmployeeType employeeType;
+        private int numberOfHoursWorked;
+        private double wage;
+        private double? hourlyRate;
 
-        public DateTime birthDay;
+        private DateTime birthDay;
+        private const int minimalHoursWorkedUnit = 1;
 
-        const int minimalHoursWorkedUnit = 1;
+        private static double taxRate = 0.15;
 
-        public static double taxRate = 0.15;
+        private Address address;
 
-        public Employee(string first, string last, string em, DateTime bd, double? rate, EmployeeType empType)
+        public string FirstName
         {
-            firstName = first;
-            lastName = last;
-            email = em;
-            birthDay = bd;
-            hourlyRate = rate ?? 10;
-            employeeType = empType;
+            get
+            {
+                return firstName;
+            }
+            set
+            {
+                firstName = value;
+            }
+        }
+        public string LastName
+        {
+            get
+            {
+                return lastName;
+            }
+            set
+            {
+                lastName = value;
+            }
         }
 
-        public Employee(string first, string last, string em, DateTime bd) : this(first, last, em, bd, 0, EmployeeType.StoreManager)
+        public string Email
         {
+            get
+            {
+                return email;
+            }
+            set
+            {
+                email = value;
+            }
         }
+
+        public int NumberOfHoursWorked
+        {
+            get
+            {
+                return numberOfHoursWorked;
+            }
+            protected set
+            {
+                numberOfHoursWorked = value;
+            }
+        }
+
+        public double Wage
+        {
+            get
+            {
+                return wage;
+            }
+            private set
+            {
+                wage = value;
+            }
+        }
+
+        public double? HourlyRate
+        {
+            get
+            {
+                return hourlyRate;
+            }
+            set
+            {
+                if (hourlyRate < 0)
+                {
+                    hourlyRate = 0;
+                }
+                else
+                {
+                    hourlyRate = value;
+                }
+            }
+        }
+
+        public DateTime BirthDay
+        {
+            get
+            {
+                return birthDay;
+            }
+            set
+            {
+                birthDay = value;
+            }
+        }    
+        public Address Address
+        {
+            get
+            {
+                return address;
+            }
+            set
+            {
+                address = value;
+            }
+        }
+
+        public static double TaxRate
+        {
+            get
+            {
+                return taxRate;
+            }
+            set
+            {
+                taxRate = value;
+            }
+        }
+
+        public Employee(string first, string last, string em, DateTime bd) : this(first, last, em, bd, 0)
+        {
+
+        }
+
+        public Employee(string first, string last, string em, DateTime bd, double? rate)
+        {
+            FirstName = first;
+            LastName = last;
+            Email = em;
+            BirthDay = bd;
+            HourlyRate = rate ?? 10;
+        }
+        public Employee(string first, string last, string em, DateTime bd, double? rate, string street, string houseNumber, string zip, string city)
+        {
+            FirstName = first;
+            LastName = last;
+            Email = em;
+            BirthDay = bd;
+            HourlyRate = rate ?? 10;
+            Address = new Address(street, houseNumber, zip, city);
+        }
+
 
         public void PerformWork()
         {
@@ -41,15 +166,15 @@ namespace BethanysPieShopHRM.HR
 
         public void PerformWork(int numberOfHours)
         {
-            numberOfHoursWorked += numberOfHours;
+            NumberOfHoursWorked += numberOfHours;
 
-            Console.WriteLine($"{firstName} {lastName} has worked for {numberOfHours} hour(s)!");
+            Console.WriteLine($"{FirstName} {LastName} has worked for {numberOfHours} hour(s)!");
         }
 
         public int CalculateBonus(int bonus)
         {
 
-            if (numberOfHoursWorked > 10)
+            if (NumberOfHoursWorked > 10)
                 bonus *= 2;
 
             Console.WriteLine($"The employee got a bonus of {bonus}");
@@ -75,7 +200,7 @@ namespace BethanysPieShopHRM.HR
         public int CalculateBonusAndBonusTax(int bonus, out int bonusTax)
         {
             bonusTax = 0;
-            if (numberOfHoursWorked > 10)
+            if (NumberOfHoursWorked > 10)
                 bonus *= 2;
 
             if (bonus >= 200)
@@ -91,35 +216,25 @@ namespace BethanysPieShopHRM.HR
 
         public double ReceiveWage(bool resetHours = true)
         {
-            double wageBeforeTax = 0.0;
+            double wageBeforeTax = NumberOfHoursWorked * HourlyRate.Value;
 
-            if (employeeType == EmployeeType.Manager)
-            {
-                Console.WriteLine($"An extra was added to the wage since {firstName} is a manager!");
-                wageBeforeTax = numberOfHoursWorked * hourlyRate.Value * 1.25;
-            }
-            else
-            {
-                wageBeforeTax = numberOfHoursWorked * hourlyRate.Value;
-            }
+            double taxAmount = wageBeforeTax * TaxRate;
 
-            double taxAmount = wageBeforeTax * taxRate;
+            Wage = wageBeforeTax - taxAmount;
 
-            wage = wageBeforeTax - taxAmount;
-
-            Console.WriteLine($"{firstName} {lastName} has received a wage of {wage} for {numberOfHoursWorked} hour(s) of work.");
+            Console.WriteLine($"{firstName} {lastName} has received a wage of {Wage} for {NumberOfHoursWorked} hour(s) of work.");
 
             if (resetHours)
-                numberOfHoursWorked = 0;
+                NumberOfHoursWorked = 0;
 
-            return wage;
+            return Wage;
         }
 
         public double CalculateWage()
         {
             WageCalculations wageCalculations = new WageCalculations();
 
-            double calculateValue = wageCalculations.ComplexWageCalculation(wage, taxRate, 3, 42);
+            double calculateValue = wageCalculations.ComplexWageCalculation(Wage, TaxRate, 3, 42);
 
             return calculateValue;
 
@@ -134,12 +249,12 @@ namespace BethanysPieShopHRM.HR
 
         public static void DisplayTaxRate()
         {
-            Console.WriteLine($"The current tax rate is {taxRate}");
+            Console.WriteLine($"The current tax rate is {TaxRate}");
         }
 
         public void DisplayEmployeeDetails()
         {
-            Console.WriteLine($"\nFirst name: \t{firstName}\nLast name: \t{lastName}\nEmail: \t\t{email}\nBirthday: \t{birthDay.ToShortDateString()}\nTax rate: \t{taxRate}");
+            Console.WriteLine($"\nFirst name: \t{FirstName}\nLast name: \t{LastName}\nEmail: \t\t{Email}\nBirthday: \t{BirthDay.ToShortDateString()}\nTax rate: \t{TaxRate}");
         }
     }
 }

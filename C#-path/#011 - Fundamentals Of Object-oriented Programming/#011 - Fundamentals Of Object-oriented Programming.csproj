@@ -8,4 +8,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="BethanysPieShopHRM.Logic">
+      <HintPath>..\GlobalFiles\BethanysPieShopHRM.Logic.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
