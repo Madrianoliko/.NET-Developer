@@ -1,11 +1,9 @@
-﻿using _011___Fundamentals_Of_Object_oriented_Programming.HR;
-using BethanysPieShopHRM.Logic;
+﻿using BethanysPieShopHRM.Logic;
 using Newtonsoft.Json;
-using System.IO;
 
 namespace BethanysPieShopHRM.HR
 {
-    internal class Employee
+    public class Employee: IEmployee
     {
         private string firstName;
         private string lastName;
@@ -18,27 +16,22 @@ namespace BethanysPieShopHRM.HR
         private DateTime birthDay;
         private const int minimalHoursWorkedUnit = 1;
 
-        private static double taxRate = 0.15;
-
         private Address address;
+
+        public static double taxRate = 0.15;
 
         public string FirstName
         {
-            get
-            {
-                return firstName;
-            }
+            get { return firstName; }
             set
             {
                 firstName = value;
             }
         }
+
         public string LastName
         {
-            get
-            {
-                return lastName;
-            }
+            get { return lastName; }
             set
             {
                 lastName = value;
@@ -47,10 +40,7 @@ namespace BethanysPieShopHRM.HR
 
         public string Email
         {
-            get
-            {
-                return email;
-            }
+            get { return email; }
             set
             {
                 email = value;
@@ -59,10 +49,7 @@ namespace BethanysPieShopHRM.HR
 
         public int NumberOfHoursWorked
         {
-            get
-            {
-                return numberOfHoursWorked;
-            }
+            get { return numberOfHoursWorked; }
             protected set
             {
                 numberOfHoursWorked = value;
@@ -71,10 +58,7 @@ namespace BethanysPieShopHRM.HR
 
         public double Wage
         {
-            get
-            {
-                return wage;
-            }
+            get { return wage; }
             private set
             {
                 wage = value;
@@ -83,81 +67,65 @@ namespace BethanysPieShopHRM.HR
 
         public double? HourlyRate
         {
-            get
-            {
-                return hourlyRate;
-            }
+            get { return hourlyRate; }
             set
             {
-                if (hourlyRate < 0)
+                if (hourlyRate < 0)//this should always be higher than 0
                 {
                     hourlyRate = 0;
                 }
                 else
                 {
                     hourlyRate = value;
+
                 }
             }
         }
 
         public DateTime BirthDay
         {
-            get
-            {
-                return birthDay;
-            }
+            get { return birthDay; }
             set
             {
                 birthDay = value;
             }
-        }    
+        }
+
         public Address Address
         {
-            get
-            {
-                return address;
-            }
+            get { return address; }
             set
             {
                 address = value;
             }
         }
 
-        public static double TaxRate
+
+        public Employee(string firstName, string lastName, string email, DateTime birthDay)
+            : this(firstName, lastName, email, birthDay, 0)
         {
-            get
-            {
-                return taxRate;
-            }
-            set
-            {
-                taxRate = value;
-            }
         }
 
-        public Employee(string first, string last, string em, DateTime bd) : this(first, last, em, bd, 0)
+        public Employee(string firstName, string lastName, string email, DateTime birthDay, double? hourlyRate)
         {
-
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            BirthDay = birthDay;
+            HourlyRate = hourlyRate ?? 10;
+            
         }
 
-        public Employee(string first, string last, string em, DateTime bd, double? rate)
+        public Employee(string firstName, string lastName, string email, DateTime birthDay, double? hourlyRate, string street, string houseNumber, string zip, string city)
         {
-            FirstName = first;
-            LastName = last;
-            Email = em;
-            BirthDay = bd;
-            HourlyRate = rate ?? 10;
-        }
-        public Employee(string first, string last, string em, DateTime bd, double? rate, string street, string houseNumber, string zip, string city)
-        {
-            FirstName = first;
-            LastName = last;
-            Email = em;
-            BirthDay = bd;
-            HourlyRate = rate ?? 10;
-            Address = new Address(street, houseNumber, zip, city);
-        }
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            BirthDay = birthDay;
+            HourlyRate = hourlyRate ?? 10;
 
+            Address = new Address(street, houseNumber, zip, city);  
+        }
 
         public void PerformWork()
         {
@@ -167,6 +135,7 @@ namespace BethanysPieShopHRM.HR
         public void PerformWork(int numberOfHours)
         {
             NumberOfHoursWorked += numberOfHours;
+            NumberOfHoursWorked++;
 
             Console.WriteLine($"{FirstName} {LastName} has worked for {numberOfHours} hour(s)!");
         }
@@ -180,22 +149,6 @@ namespace BethanysPieShopHRM.HR
             Console.WriteLine($"The employee got a bonus of {bonus}");
             return bonus;
         }
-
-        //public int CalculateBonusAndBonusTax(int bonus, ref int bonusTax)
-        //{
-
-        //    if (numberOfHoursWorked > 10)
-        //        bonus *= 2;
-
-        //    if (bonus >= 200)
-        //    {
-        //        bonusTax = bonus / 10;
-        //        bonus -= bonusTax;
-        //    }
-
-        //    Console.WriteLine($"The employee got a bonus of {bonus} and the tax on the bonus is {bonusTax}");
-        //    return bonus;
-        //}
 
         public int CalculateBonusAndBonusTax(int bonus, out int bonusTax)
         {
@@ -213,16 +166,19 @@ namespace BethanysPieShopHRM.HR
             return bonus;
         }
 
+        public virtual void GiveBonus()
+        {
+            Console.WriteLine($"{FirstName} {LastName} received a generic bonus of 100!");
+        }
 
         public double ReceiveWage(bool resetHours = true)
         {
             double wageBeforeTax = NumberOfHoursWorked * HourlyRate.Value;
-
-            double taxAmount = wageBeforeTax * TaxRate;
+            double taxAmount = wageBeforeTax * taxRate;
 
             Wage = wageBeforeTax - taxAmount;
 
-            Console.WriteLine($"{firstName} {lastName} has received a wage of {Wage} for {NumberOfHoursWorked} hour(s) of work.");
+            Console.WriteLine($"{FirstName} {LastName} has received a wage of {Wage} for {NumberOfHoursWorked} hour(s) of work.");
 
             if (resetHours)
                 NumberOfHoursWorked = 0;
@@ -234,7 +190,7 @@ namespace BethanysPieShopHRM.HR
         {
             WageCalculations wageCalculations = new WageCalculations();
 
-            double calculateValue = wageCalculations.ComplexWageCalculation(Wage, TaxRate, 3, 42);
+            double calculateValue = wageCalculations.ComplexWageCalculation(Wage, taxRate, 3, 42);
 
             return calculateValue;
 
@@ -249,12 +205,17 @@ namespace BethanysPieShopHRM.HR
 
         public static void DisplayTaxRate()
         {
-            Console.WriteLine($"The current tax rate is {TaxRate}");
+            Console.WriteLine($"The current tax rate is {taxRate}");
         }
 
         public void DisplayEmployeeDetails()
         {
-            Console.WriteLine($"\nFirst name: \t{FirstName}\nLast name: \t{LastName}\nEmail: \t\t{Email}\nBirthday: \t{BirthDay.ToShortDateString()}\nTax rate: \t{TaxRate}");
+            Console.WriteLine($"\nFirst name: \t{FirstName}\nLast name: \t{LastName}\nEmail: \t\t{Email}\nBirthday: \t{BirthDay.ToShortDateString()}\n");
+        }
+
+        public void GiveCompliment()
+        {
+            Console.WriteLine($"You've done a great job, {FirstName}");
         }
     }
 }

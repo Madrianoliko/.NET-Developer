@@ -1,18 +1,26 @@
-﻿using BethanysPieShopHRM.HR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _011___Fundamentals_Of_Object_oriented_Programming.HR
+namespace BethanysPieShopHRM.HR
 {
-    internal class Developer : Employee
+    internal class Developer: Employee
     {
-        public Developer(string first, string last, string em, DateTime bd, double? rate) : base(first, last, em, bd, rate)
+        private string currentProject;
+
+        public string CurrentProject
         {
+            get { return currentProject; }
+            set
+            {
+                currentProject = value;
+            }
         }
 
-        public string CurrentProject { get; set; }
+        public Developer(string firstName, string lastName, string email, DateTime birthDay, double? hourlyRate) : base(firstName, lastName, email, birthDay, hourlyRate)
+        {
+        }
     }
 }

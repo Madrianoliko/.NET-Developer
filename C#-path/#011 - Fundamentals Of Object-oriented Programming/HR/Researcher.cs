@@ -1,37 +1,45 @@
-﻿using BethanysPieShopHRM.HR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _011___Fundamentals_Of_Object_oriented_Programming.HR
+namespace BethanysPieShopHRM.HR
 {
     internal class Researcher : Employee
     {
-        public Researcher(string first, string last, string em, DateTime bd, double? rate) : base(first, last, em, bd, rate)
+
+        public Researcher(string firstName, string lastName, string email, DateTime birthDay, double? hourlyRate) : base(firstName, lastName, email, birthDay, hourlyRate)
         {
         }
 
-        public int NumberOfPieTastesInvented { get; set; }
+        private int numberOfPieTastesInvented = 0;
+        public int NumberOfPieTastesInvented
+        {
+            get
+            {
+                return numberOfPieTastesInvented;
+            }
+            private set
+            {
+                numberOfPieTastesInvented = value;
+            }
+        }
 
-        public void ResearchNewPieTaste(int researchHours)
+        public void ResearchNewPieTastes(int researchHours)
         {
             NumberOfHoursWorked += researchHours;
 
-            if(new Random().Next(100) > 50)
+            if (new Random().Next(100) > 50)//we'll leave it to chance!
             {
                 NumberOfPieTastesInvented++;
 
-                Console.WriteLine($"Researcher {FirstName} {LastName} has invented a new pie taste ! Total number of pies invented: { NumberOfPieTastesInvented }");
+                Console.WriteLine($"Researcher {FirstName} {LastName} has invented a new pie taste! Total number of pies invented: {NumberOfPieTastesInvented}");
             }
             else
             {
                 Console.WriteLine($"Researcher {FirstName} {LastName} is working still on a new pie taste!");
             }
-
-            NumberOfPieTastesInvented++;
-            Console.WriteLine("Researching new pie taste");
         }
     }
 }

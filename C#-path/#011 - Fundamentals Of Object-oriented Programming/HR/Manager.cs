@@ -1,15 +1,14 @@
-﻿using BethanysPieShopHRM.HR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _011___Fundamentals_Of_Object_oriented_Programming.HR
+namespace BethanysPieShopHRM.HR
 {
     internal class Manager : Employee
     {
-        public Manager(string first, string last, string em, DateTime bd, double? rate) : base(first, last, em, bd, rate)
+        public Manager(string firstName, string lastName, string email, DateTime birthDay, double? hourlyRate) : base(firstName, lastName, email, birthDay, hourlyRate)
         {
             
         }
@@ -17,7 +16,15 @@ namespace _011___Fundamentals_Of_Object_oriented_Programming.HR
         public void AttendManagementMeeting()
         {
             NumberOfHoursWorked += 10;
-            Console.WriteLine("Attending management meeting");
+            Console.WriteLine($"Manager {FirstName} {LastName} is now attending a long meeting that could have been an email!");
+        }
+
+        public override void GiveBonus()
+        {
+            if (NumberOfHoursWorked > 5)
+                Console.WriteLine($"Manager {FirstName} {LastName} received a management bonus of 500!");
+            else
+                Console.WriteLine($"Manager {FirstName} {LastName} received a management bonus of 250!");
         }
     }
 }

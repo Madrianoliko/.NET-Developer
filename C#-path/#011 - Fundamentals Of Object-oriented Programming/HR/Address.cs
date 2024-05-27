@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _011___Fundamentals_Of_Object_oriented_Programming.HR
+namespace BethanysPieShopHRM.HR
 {
-    internal class Address
+    public class Address
     {
         private string street;
         private string houseNumber;
