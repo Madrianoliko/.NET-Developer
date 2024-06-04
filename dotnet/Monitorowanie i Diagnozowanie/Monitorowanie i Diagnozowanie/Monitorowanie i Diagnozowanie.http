@@ -1,0 +1,6 @@
+@Monitorowanie_i_Diagnozowanie_HostAddress = http://localhost:5215
+
+GET {{Monitorowanie_i_Diagnozowanie_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
