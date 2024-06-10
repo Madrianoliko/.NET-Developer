@@ -1,0 +1,7 @@
+// UnitTests
+AutoFixture
+FluentAssertions
+Moq
+
+// E2E
+Playwright for .NET
